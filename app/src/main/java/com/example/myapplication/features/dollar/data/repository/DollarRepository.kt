@@ -20,11 +20,11 @@ class DollarRepository(val realTimeRemoteDataSource: RealTimeRemoteDataSource,
             }
     }
 
-    fun getHistory(): Flow<List<DollarModel>> {
+    /*fun getHistory(): Flow<List<DollarModel>> {
         return localDataSource.getHistory()
     }
 
     suspend fun deleteDollar(dollar: DollarModel) {
         localDataSource.delete(dollar)
-    }
+    }*/
 }

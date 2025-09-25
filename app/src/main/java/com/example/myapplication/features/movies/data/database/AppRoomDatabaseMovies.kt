@@ -14,13 +14,13 @@ abstract class AppRoomDatabaseMovies: RoomDatabase() {
 
     companion object {
         @Volatile
-        private var Instance: AppRoomDatabase? = null
+        private var Instance: AppRoomDatabaseMovies? = null
 
-        fun getDatabase(context: Context): AppRoomDatabase {
+        fun getDatabase(context: Context): AppRoomDatabaseMovies {
             return Instance ?: synchronized(this) {
                 Room.databaseBuilder(
                     context.applicationContext,
-                    AppRoomDatabase::class.java,
+                    AppRoomDatabaseMovies::class.java,
                     "movies_db"
                 )
                     .fallbackToDestructiveMigration()

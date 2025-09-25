@@ -19,33 +19,34 @@ fun AppNavigation(){
 
     NavHost(
         navController = navController,
-        startDestination = Screen.LogInPage.route,
+        startDestination = Screen.Dollar.route,
         enterTransition = { EnterTransition.None},
         exitTransition = { ExitTransition.None},
         popEnterTransition = { EnterTransition.None},
         popExitTransition = { ExitTransition.None}
     ){
-        composable(Screen.LogInPage.route){
+        composable(Screen.Dollar.route) {
+            DollarScreen(navController)
+        }
+        /*composable(Screen.LogInPage.route){
             LogInPage(
                 onSuccess = {
                     //navController.navigate(Screen.GithubScreen.route)
                     navController.navigate(Screen.Dollar.route)
                 }
             )
-        }
+        }*/
 
         //composable(Screen.GithubScreen.route) {
           //  GithubScreen(modifier = Modifier.padding())
         //}
 
 
-        /*composable(Screen.MoviesScreen.route){
-            MoviesScreen(modifier = Modifier.padding())
-        }*/
-
-        composable(Screen.Dollar.route) {
-            DollarScreen()
+        composable(Screen.MoviesScreen.route){
+            MoviesScreen()
         }
+
+
 
     }
 

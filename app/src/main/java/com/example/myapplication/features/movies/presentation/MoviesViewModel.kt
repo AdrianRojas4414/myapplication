@@ -3,6 +3,7 @@ package com.example.myapplication.features.movies.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.myapplication.features.github.presentation.GirhubViewModel.GithubStateUI
+import com.example.myapplication.features.movies.data.repository.MovieRepository
 import com.example.myapplication.features.movies.domain.model.MovieModel
 import com.example.myapplication.features.movies.domain.usercases.GetMoviesUseCase
 import kotlinx.coroutines.Dispatchers
@@ -11,7 +12,8 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-class MoviesViewModel(val useCase: GetMoviesUseCase): ViewModel() {
+class MoviesViewModel(val useCase: GetMoviesUseCase,
+                      val repository: MovieRepository): ViewModel() {
     sealed class MoviesUiState{
         object Init : MoviesUiState()
         object Loading : MoviesUiState()
@@ -21,6 +23,16 @@ class MoviesViewModel(val useCase: GetMoviesUseCase): ViewModel() {
 
     private val _state = MutableStateFlow<MoviesUiState>(MoviesUiState.Init)
     val state : StateFlow<MoviesUiState> = _state.asStateFlow()
+
+    private fun observeLocalMovies() {
+        viewModelScope.launch {
+            repository.getMoviesFromDb().collect { movies ->
+                if (movies.isNotEmpty()) {
+                    _state.value = MoviesUiState.Success(movies)
+                }
+            }
+        }
+    }
 
     fun fetchMovies() {
         viewModelScope.launch(Dispatchers.IO) {

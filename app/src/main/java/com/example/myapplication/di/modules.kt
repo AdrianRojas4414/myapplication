@@ -18,6 +18,8 @@ import com.example.myapplication.features.login.domain.repository.ILoginReposito
 import com.example.myapplication.features.login.domain.usercases.LoginUseCase
 import com.example.myapplication.features.login.presentation.LogInViewModel
 import com.example.myapplication.features.movies.data.api.MovieService
+import com.example.myapplication.features.movies.data.database.AppRoomDatabaseMovies
+import com.example.myapplication.features.movies.data.datasource.MovieLocalDataSource
 import com.example.myapplication.features.movies.data.datasource.MovieRemoteDataSource
 import com.example.myapplication.features.movies.data.repository.MovieRepository
 import com.example.myapplication.features.movies.domain.repository.IMovieRepository
@@ -86,13 +88,17 @@ val appModule = module() {
 
 
     //Movies
+    single { AppRoomDatabaseMovies.getDatabase(get()) }
+    single { get<AppRoomDatabaseMovies>().movieDao() }
     single<MovieService> {
         get<Retrofit>(named("movies")).create(MovieService::class.java)
     }
+    single { MovieLocalDataSource(get()) }
     single { MovieRemoteDataSource(get(), get()) }
-    single<IMovieRepository> { MovieRepository(get()) }
+    single<IMovieRepository> { MovieRepository(get(), get()) }
+    single<MovieRepository>{ MovieRepository(get(),get()) }
     factory { GetMoviesUseCase(get()) }
-    viewModel { MoviesViewModel(get()) }
+    viewModel { MoviesViewModel(get(), get()) }
 
 
     //Dollar

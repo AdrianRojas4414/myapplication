@@ -12,6 +12,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -24,12 +25,16 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import com.example.myapplication.navigation.Screen
 import org.koin.androidx.compose.koinViewModel
 import java.text.SimpleDateFormat
 import java.util.Locale
 
 @Composable
-fun DollarScreen(viewModelDollar: DollarViewModel = koinViewModel()) {
+fun DollarScreen(navController: NavController,
+                 viewModelDollar: DollarViewModel = koinViewModel(),
+                 ) {
     val state = viewModelDollar.uiState.collectAsState()
     val history by viewModelDollar.history.collectAsState()
 
@@ -56,7 +61,15 @@ fun DollarScreen(viewModelDollar: DollarViewModel = koinViewModel()) {
                 Text("Actualizado: $date", style = MaterialTheme.typography.headlineMedium)
             }
         }
+        Button(
+            modifier = Modifier.fillMaxWidth(),
+            onClick = {navController.navigate(Screen.MoviesScreen.route)}
+        ) {
+            Text("Ver Peliculas")
+        }
     }
+
+
     /*Spacer(Modifier.height(16.dp))
 
     Text("Histórico", style = MaterialTheme.typography.titleMedium)

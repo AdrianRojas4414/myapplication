@@ -1,0 +1,8 @@
+package com.example.myapplication.navigation
+
+sealed class Screen(val route: String) {
+    object LogInPage : Screen("login")
+    object GithubScreen : Screen("github")
+    object MoviesScreen : Screen("movies")
+    object Dollar: Screen("dollar")
+}

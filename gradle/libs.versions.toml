@@ -21,6 +21,7 @@ converterGson = "3.0.0"
 googleGmsGoogleServices = "4.4.2"
 firebaseDatabase = "21.0.0"
 firebaseMessaging = "25.0.1"
+firebaseRemoteConfig = "22.0.0"
 ksp = "2.0.20-1.0.24"
 room = "2.8.0"
 datastore = "1.0.0"
@@ -53,6 +54,7 @@ retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit
 converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "converterGson" }
 firebase-database = { group = "com.google.firebase", name = "firebase-database", version.ref = "firebaseDatabase" }
 firebase-messaging = { group = "com.google.firebase", name = "firebase-messaging", version.ref = "firebaseMessaging" }
+firebase-remoteconfig = { group = "com.google.firebase", name = "firebase-config-ktx", version.ref = "firebaseRemoteConfig" }
 #room
 room-runtime = { group="androidx.room", name="room-runtime", version.ref="room"}
 room-compiler = { group="androidx.room", name="room-compiler", version.ref="room"}

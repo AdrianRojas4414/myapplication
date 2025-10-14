@@ -17,6 +17,9 @@ import com.example.myapplication.features.login.data.repository.LoginRepository
 import com.example.myapplication.features.login.domain.repository.ILoginRepository
 import com.example.myapplication.features.login.domain.usercases.LoginUseCase
 import com.example.myapplication.features.login.presentation.LogInViewModel
+import com.example.myapplication.features.maintenance.data.MaintenanceDataStore
+import com.example.myapplication.features.maintenance.data.MaintenanceRepository
+import com.example.myapplication.features.maintenance.presentation.MaintenanceViewModel
 import com.example.myapplication.features.movies.data.api.MovieService
 import com.example.myapplication.features.movies.data.database.AppRoomDatabaseMovies
 import com.example.myapplication.features.movies.data.datasource.MovieLocalDataSource
@@ -29,6 +32,7 @@ import com.example.myapplication.features.profile.data.repository.ProfileReposit
 import com.example.myapplication.features.profile.domain.repository.IProfileRepository
 import com.example.myapplication.features.profile.domain.usercases.GetProfileUseCase
 import com.example.myapplication.features.profile.presentation.ProfileViewModel
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import okhttp3.OkHttpClient
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.core.qualifier.named
@@ -112,4 +116,12 @@ val appModule = module() {
     single<DollarRepository>{ DollarRepository(get(), get()) }
     factory { FetchDollarUseCase(get()) }
     viewModel{ DollarViewModel(get(), get()) }
+
+    // Maintenance
+    single { MaintenanceDataStore(get()) }
+    single {
+        FirebaseRemoteConfig.getInstance()
+    }
+    single { MaintenanceRepository(get(), get()) }
+    viewModel { MaintenanceViewModel(get()) }
 }

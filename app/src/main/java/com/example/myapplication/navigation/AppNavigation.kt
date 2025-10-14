@@ -12,6 +12,7 @@ import com.example.myapplication.features.dollar.presentation.DollarScreen
 import com.example.myapplication.features.github.presentation.GithubScreen
 import com.example.myapplication.features.login.presentation.LogInPage
 import com.example.myapplication.features.movies.presentation.MoviesScreen
+import com.example.myapplication.features.profile.presentation.ProfileScreen
 
 @Composable
 fun AppNavigation(){
@@ -19,7 +20,7 @@ fun AppNavigation(){
 
     NavHost(
         navController = navController,
-        startDestination = Screen.Dollar.route,
+        startDestination = Screen.Profile.route,
         enterTransition = { EnterTransition.None},
         exitTransition = { ExitTransition.None},
         popEnterTransition = { EnterTransition.None},
@@ -28,6 +29,19 @@ fun AppNavigation(){
         composable(Screen.Dollar.route) {
             DollarScreen(navController)
         }
+
+        composable(Screen.GithubScreen.route) {
+            GithubScreen(modifier = Modifier.padding())
+        }
+
+        composable(Screen.MoviesScreen.route){
+            MoviesScreen()
+        }
+
+        composable(Screen.Profile.route){
+            ProfileScreen()
+        }
+
         /*composable(Screen.LogInPage.route){
             LogInPage(
                 onSuccess = {
@@ -36,43 +50,5 @@ fun AppNavigation(){
                 }
             )
         }*/
-
-        //composable(Screen.GithubScreen.route) {
-          //  GithubScreen(modifier = Modifier.padding())
-        //}
-
-
-        composable(Screen.MoviesScreen.route){
-            MoviesScreen()
-        }
-
-
-
     }
-
-
-    /*NavHost(
-        navController = navController,
-        startDestination = Screen.Dollar.route
-    ) {
-        composable(Screen.Github.route) {
-            GithubScreen(modifier = Modifier)
-        }
-        composable(Screen.Home.route) {
-
-
-        }
-        composable(Screen.Profile.route) {
-            ProfileScreen()
-        }
-
-
-        composable(Screen.CardExamples.route) { CardScreen() }
-
-
-        composable(Screen.Dollar.route) {
-            DollarScreen()
-        }
-    }*/
-
 }

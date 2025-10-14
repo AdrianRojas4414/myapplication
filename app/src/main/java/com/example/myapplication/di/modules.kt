@@ -76,9 +76,9 @@ val appModule = module() {
 
 
     // Profile
-    //single<IProfileRepository> { ProfileRepository() }
-    //factory { GetProfileUseCase(get()) }
-    //viewModel { ProfileViewModel(get()) }
+    single<IProfileRepository> { ProfileRepository() }
+    factory { GetProfileUseCase(get()) }
+    viewModel { ProfileViewModel(get()) }
 
 
     //Login

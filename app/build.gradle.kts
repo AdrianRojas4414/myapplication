@@ -62,6 +62,7 @@ dependencies {
     implementation(libs.converter.gson)
     implementation(libs.firebase.database)
     implementation(libs.firebase.messaging)
+    implementation(libs.datastore)
 
     //local bundle room
     implementation(libs.bundles.local)

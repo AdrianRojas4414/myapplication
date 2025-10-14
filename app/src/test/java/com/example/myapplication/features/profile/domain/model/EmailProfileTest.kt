@@ -12,7 +12,7 @@ class EmailProfileTest {
         val expected = "adrian@gmail.com"
 
         //act
-        val emailValueObject = com.example.myapplication.features.profile.domain.model.Email.create(inputData)
+        val emailValueObject = Email.create(inputData)
 
         //assert
         assertEquals(expected, emailValueObject.value)

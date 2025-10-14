@@ -4,11 +4,21 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.migration.Migration
+import androidx.sqlite.SQLiteConnection
+import androidx.sqlite.execSQL
 import com.example.myapplication.features.dollar.data.database.AppRoomDatabase
 import com.example.myapplication.features.movies.data.database.dao.IMovieDao
 import com.example.myapplication.features.movies.data.database.entity.MovieEntity
 
-@Database(entities = [MovieEntity::class], version = 1)
+val MIGRATION_1_2 = object: Migration(1,2){
+    override fun migrate(database: SQLiteConnection) {
+        database.execSQL("ALTER TABLE 'movies' ADD COLUMN timestamp TEXT")
+        database.execSQL("UPDATE movies SET timestamp = '' WHERE timestamp IS NULL")
+    }
+}
+
+@Database(entities = [MovieEntity::class], version = 2)
 abstract class AppRoomDatabaseMovies: RoomDatabase() {
     abstract fun movieDao(): IMovieDao
 
@@ -23,7 +33,8 @@ abstract class AppRoomDatabaseMovies: RoomDatabase() {
                     AppRoomDatabaseMovies::class.java,
                     "movies_db"
                 )
-                    .fallbackToDestructiveMigration()
+                    //.fallbackToDestructiveMigration()
+                    .addMigrations(MIGRATION_1_2)
                     .build()
                     .also { Instance = it }
             }

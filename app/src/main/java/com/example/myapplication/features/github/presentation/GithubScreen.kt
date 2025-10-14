@@ -73,7 +73,7 @@ fun GithubScreen(modifier: Modifier,
             is GirhubViewModel.GithubStateUI.Success -> {
                 Text("Usuario: ${st.github.nickName}")
                 AsyncImage(
-                    model = st.github.pathURL,
+                    model = st.github.pathURL.value,
                     contentDescription = null,
                     modifier = Modifier
                         .size(120.dp)

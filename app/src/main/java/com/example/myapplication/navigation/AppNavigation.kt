@@ -4,7 +4,11 @@ import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavController
+import androidx.navigation.NavHost
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -13,18 +17,44 @@ import com.example.myapplication.features.github.presentation.GithubScreen
 import com.example.myapplication.features.login.presentation.LogInPage
 import com.example.myapplication.features.movies.presentation.MoviesScreen
 import com.example.myapplication.features.profile.presentation.ProfileScreen
+import androidx.navigation.compose.NavHost
 
 @Composable
-fun AppNavigation(){
-    val navController = rememberNavController()
+fun AppNavigation(navigationViewModel: NavigationViewModel ,
+                  modifier: Modifier,
+                  navController: NavHostController){
+
+    // Manejar navegación desde el ViewModel
+    LaunchedEffect (Unit) {
+        navigationViewModel.navigationCommand.collect { command ->
+            when (command) {
+                is NavigationViewModel.NavigationCommand.NavigateTo -> {
+                    navController.navigate(command.route) {
+                        // Configuración del back stack según sea necesario
+                        when (command.options) {
+                            NavigationOptions.CLEAR_BACK_STACK -> {
+                                popUpTo(0) // Limpiartodo el back stack
+                            }
+                            NavigationOptions.REPLACE_HOME -> {
+                                popUpTo(Screen.Dollar.route) { inclusive = true }
+                            }
+                            else -> {
+                                // Navegación normal
+                            }
+                        }
+                    }
+                }
+                is NavigationViewModel.NavigationCommand.PopBackStack -> {
+                    navController.popBackStack()
+                }
+            }
+        }
+    }
 
     NavHost(
         navController = navController,
-        startDestination = Screen.Profile.route,
-        enterTransition = { EnterTransition.None},
-        exitTransition = { ExitTransition.None},
-        popEnterTransition = { EnterTransition.None},
-        popExitTransition = { ExitTransition.None}
+        startDestination = Screen.LogInPage.route,
+        modifier = modifier
     ){
         composable(Screen.Dollar.route) {
             DollarScreen(navController)
@@ -42,13 +72,12 @@ fun AppNavigation(){
             ProfileScreen()
         }
 
-        /*composable(Screen.LogInPage.route){
+        composable(Screen.LogInPage.route){
             LogInPage(
                 onSuccess = {
-                    //navController.navigate(Screen.GithubScreen.route)
-                    navController.navigate(Screen.Dollar.route)
+                    navController.navigate(Screen.GithubScreen.route)
                 }
             )
-        }*/
+        }
     }
 }

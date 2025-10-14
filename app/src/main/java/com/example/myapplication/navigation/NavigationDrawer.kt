@@ -17,16 +17,24 @@ sealed class NavigationDrawer(
     val unselectedIcon: ImageVector,
     val route: String
 ) {
-    data object Profile : NavigationDrawer("Profile", Icons.Filled.Home,
-        Icons.Outlined.Home, Screen.Profile.route
-    )
-    data object Dollar : NavigationDrawer("Dollar",
-        Icons.Filled.ShoppingCart, Icons.Outlined.ShoppingCart,
+    data object Profile : NavigationDrawer(
+        "Profile",
+        Icons.Filled.Home,
+        Icons.Outlined.Home,
+        Screen.Profile.route)
+    data object Dollar : NavigationDrawer(
+        "Dollar",
+        Icons.Filled.ShoppingCart,
+        Icons.Outlined.ShoppingCart,
         Screen.Dollar.route)
-    data object Github : NavigationDrawer("Github",
-        Icons.Filled.Favorite, Icons.Outlined.FavoriteBorder,
+    data object Github : NavigationDrawer(
+        "Github",
+        Icons.Filled.Favorite,
+        Icons.Outlined.FavoriteBorder,
         Screen.GithubScreen.route)
-    data object Movie : NavigationDrawer("Movie",
-        Icons.Filled.DateRange, Icons.Outlined.DateRange,
+    data object Movie : NavigationDrawer(
+        "Movie",
+        Icons.Filled.DateRange,
+        Icons.Outlined.DateRange,
         Screen.MoviesScreen.route)
 }

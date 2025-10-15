@@ -1,6 +1,6 @@
 package com.example.myapplication.di
 
-import com.example.myapplication.features.dollar.data.database.AppRoomDatabase
+import com.example.myapplication.features.dollar.data.database.dao.IDollarDao
 import com.example.myapplication.features.dollar.data.datasource.DollarLocalDataSource
 import com.example.myapplication.features.dollar.data.datasource.RealTimeRemoteDataSource
 import com.example.myapplication.features.dollar.data.repository.DollarRepository
@@ -21,7 +21,9 @@ import com.example.myapplication.features.maintenance.data.MaintenanceDataStore
 import com.example.myapplication.features.maintenance.data.MaintenanceRepository
 import com.example.myapplication.features.maintenance.presentation.MaintenanceViewModel
 import com.example.myapplication.features.movies.data.api.MovieService
-import com.example.myapplication.features.movies.data.database.AppRoomDatabaseMovies
+import com.example.myapplication.features.movies.data.database.AppRoomDatabase
+import com.example.myapplication.features.movies.data.database.dao.IMovieDao
+//import com.example.myapplication.features.movies.data.database.AppRoomDatabaseMovies
 import com.example.myapplication.features.movies.data.datasource.MovieLocalDataSource
 import com.example.myapplication.features.movies.data.datasource.MovieRemoteDataSource
 import com.example.myapplication.features.movies.data.repository.MovieRepository
@@ -92,8 +94,9 @@ val appModule = module() {
 
 
     //Movies
-    single { AppRoomDatabaseMovies.getDatabase(get()) }
-    single { get<AppRoomDatabaseMovies>().movieDao() }
+    //single { AppRoomDatabaseMovies.getDatabase(get()) }
+    //single { get<AppRoomDatabaseMovies>().movieDao() }
+    single<IMovieDao>{ get<AppRoomDatabase>().movieDao() }
     single<MovieService> {
         get<Retrofit>(named("movies")).create(MovieService::class.java)
     }
@@ -105,9 +108,14 @@ val appModule = module() {
     viewModel { MoviesViewModel(get(), get()) }
 
 
-    //Dollar
+    //RoomDatabase
+    //single { AppRoomDatabaseA.getDatabase(get()) }
+    //single { get<AppRoomDatabaseA>().dollarDao() }
     single { AppRoomDatabase.getDatabase(get()) }
-    single { get<AppRoomDatabase>().dollarDao() }
+
+
+    //Dollar
+    single<IDollarDao> { get<AppRoomDatabase>().dollarDao() }
     single{
         RealTimeRemoteDataSource()
     }

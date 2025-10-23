@@ -1,6 +1,7 @@
 package com.example.myapplication.features.movies.presentation
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -83,7 +84,11 @@ fun MoviesScreen(
                     itemsIndexed(st.movies) { index, movie ->
                         Column(
                             horizontalAlignment = Alignment.CenterHorizontally,
-                            modifier = Modifier.fillMaxWidth()
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable{
+                                    navigateToDetail(movie)
+                                }
                         ) {
                             AsyncImage(
                                 model = movie.posterURL,

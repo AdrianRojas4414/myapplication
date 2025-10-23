@@ -25,6 +25,7 @@ import com.example.myapplication.features.movies.presentation.MovieDetailScreen
 import kotlinx.serialization.json.Json
 import java.net.URLDecoder
 import java.net.URLEncoder
+import kotlinx.serialization.encodeToString
 
 @Composable
 fun AppNavigation(navigationViewModel: NavigationViewModel ,
@@ -72,12 +73,16 @@ fun AppNavigation(navigationViewModel: NavigationViewModel ,
         }
 
         composable(Screen.MoviesScreen.route){
-            MoviesScreen( navigateToDetail  = { movie ->
+            MoviesScreen(navigateToDetail = { movie ->
+                // Serializar el objeto Movie a JSON
                 val movieJson = Json.encodeToString(movie)
-                val encodeMovieJson = URLEncoder.encode(movieJson, "UTF-8")
+                // Codificar el JSON para que sea seguro en URL
+                val encodedMovieJson = URLEncoder.encode(movieJson, "UTF-8")
 
+                // Navegar pasando el JSON codificado como parámetro
                 navController.navigate(
-                    "${Screen.MovieDetail.route}/${encodeMovieJson}")
+                    "${Screen.MovieDetail.route}/${encodedMovieJson}"
+                )
             })
         }
 
@@ -86,16 +91,20 @@ fun AppNavigation(navigationViewModel: NavigationViewModel ,
             arguments = listOf(
                 navArgument("movie") { type = NavType.StringType }
             )
-        ) {
-            val movieJson = it.arguments?.getString("movie") ?: ""
+        ) { backStackEntry ->
+            // Obtener el JSON codificado desde los argumentos
+            val movieJson = backStackEntry.arguments?.getString("movie") ?: ""
+            // Decodificar el JSON
             val movieDecoded = URLDecoder.decode(movieJson, "UTF-8")
+            // Deserializar el JSON de vuelta a objeto MovieModel
             val movie = Json.decodeFromString<MovieModel>(movieDecoded)
 
             MovieDetailScreen(
                 movie = movie,
                 back = {
                     navController.popBackStack()
-                })
+                }
+            )
         }
 
 

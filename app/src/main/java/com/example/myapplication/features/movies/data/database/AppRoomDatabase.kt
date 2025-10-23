@@ -12,14 +12,14 @@ import com.example.myapplication.features.dollar.data.database.entity.DollarEnti
 import com.example.myapplication.features.movies.data.database.dao.IMovieDao
 import com.example.myapplication.features.movies.data.database.entity.MovieEntity
 
-val MIGRATION_1_2 = object: Migration(1,2){
+val MIGRATION_1_2 = object: Migration(2,3){
     override fun migrate(database: SQLiteConnection) {
         database.execSQL("ALTER TABLE 'movies' ADD COLUMN timestamp TEXT")
         database.execSQL("UPDATE movies SET timestamp = '' WHERE timestamp IS NULL")
     }
 }
 
-@Database(entities = [DollarEntity::class, MovieEntity::class], version = 2)
+@Database(entities = [DollarEntity::class, MovieEntity::class], version = 3)
 abstract class AppRoomDatabase: RoomDatabase() {
     abstract fun dollarDao(): IDollarDao
     abstract fun movieDao(): IMovieDao
@@ -51,8 +51,8 @@ abstract class AppRoomDatabase: RoomDatabase() {
                     context,
                     AppRoomDatabase::class.java,
                     "local_db")
-                    .addMigrations(MIGRATION_1_2)
-                    // .fallbackToDestructiveMigration()
+                    /*.addMigrations(MIGRATION_1_2)*/
+                    .fallbackToDestructiveMigration()
                     .build()
                     .also { Instance = it }
             }

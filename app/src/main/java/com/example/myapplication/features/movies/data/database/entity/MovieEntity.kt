@@ -17,5 +17,8 @@ data class MovieEntity(
     val posterUrl: String,
 
     @ColumnInfo(name = "timestamp")
-    val timestamp: String? = ""
+    val timestamp: String? = "",
+
+    @ColumnInfo(name = "overview")
+    val overview: String
 )

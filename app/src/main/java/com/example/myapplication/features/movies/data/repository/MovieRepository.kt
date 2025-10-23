@@ -18,7 +18,8 @@ class MovieRepository(val remoteDatasource: MovieRemoteDataSource,
                 val movies = pageDto.results.map {
                     MovieModel(
                         title = it.title,
-                        posterURL = "https://image.tmdb.org/t/p/w185${it.poster_path}"
+                        posterURL = "https://image.tmdb.org/t/p/w185${it.poster_path}",
+                        overview = it.overview
                     )
                 }
 

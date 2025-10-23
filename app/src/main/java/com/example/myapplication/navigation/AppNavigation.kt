@@ -9,6 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import androidx.navigation.NavHost
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -18,6 +19,12 @@ import com.example.myapplication.features.login.presentation.LogInPage
 import com.example.myapplication.features.movies.presentation.MoviesScreen
 import com.example.myapplication.features.profile.presentation.ProfileScreen
 import androidx.navigation.compose.NavHost
+import androidx.navigation.navArgument
+import com.example.myapplication.features.movies.domain.model.MovieModel
+import com.example.myapplication.features.movies.presentation.MovieDetailScreen
+import kotlinx.serialization.json.Json
+import java.net.URLDecoder
+import java.net.URLEncoder
 
 @Composable
 fun AppNavigation(navigationViewModel: NavigationViewModel ,
@@ -65,8 +72,32 @@ fun AppNavigation(navigationViewModel: NavigationViewModel ,
         }
 
         composable(Screen.MoviesScreen.route){
-            MoviesScreen()
+            MoviesScreen( navigateToDetail  = { movie ->
+                val movieJson = Json.encodeToString(movie)
+                val encodeMovieJson = URLEncoder.encode(movieJson, "UTF-8")
+
+                navController.navigate(
+                    "${Screen.MovieDetail.route}/${encodeMovieJson}")
+            })
         }
+
+        composable(
+            route = "${Screen.MovieDetail.route}/{movie}",
+            arguments = listOf(
+                navArgument("movie") { type = NavType.StringType }
+            )
+        ) {
+            val movieJson = it.arguments?.getString("movie") ?: ""
+            val movieDecoded = URLDecoder.decode(movieJson, "UTF-8")
+            val movie = Json.decodeFromString<MovieModel>(movieDecoded)
+
+            MovieDetailScreen(
+                movie = movie,
+                back = {
+                    navController.popBackStack()
+                })
+        }
+
 
         composable(Screen.Profile.route){
             ProfileScreen()

@@ -40,7 +40,8 @@ import com.example.myapplication.features.movies.domain.model.MovieModel
 @Composable
 fun MoviesScreen(
     modifier: Modifier = Modifier,
-    vm: MoviesViewModel = koinViewModel()
+    vm: MoviesViewModel = koinViewModel(),
+    navigateToDetail: (movie: MovieModel) -> Unit
 ) {
     val state by vm.state.collectAsState()
 

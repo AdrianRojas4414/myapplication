@@ -25,6 +25,7 @@ firebaseRemoteConfig = "22.0.0"
 ksp = "2.0.20-1.0.24"
 room = "2.8.0"
 datastore = "1.0.0"
+kotlinx-serialization = "1.7.3"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -64,6 +65,7 @@ room-rxjava3 = { group="androidx.room", name="room-rxjava3", version.ref="room"}
 room-guava = { group="androidx.room", name="room-guava", version.ref="room"}
 room-testing = { group="androidx.room", name="room-testing", version.ref="room"}
 room-paging = { group="androidx.room", name="room-paging", version.ref="room"}
+kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
 
 #datastore
 datastore = { module = "androidx.datastore:datastore-preferences", version.ref = "datastore" }
@@ -75,6 +77,7 @@ kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 google-gms-google-services = { id = "com.google.gms.google-services", version.ref = "googleGmsGoogleServices" }
 ksp = { id = "com.google.devtools.ksp", version.ref="ksp"}
+kotlinSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin"}
 
 [bundles]
 local = ["room-runtime", "room-ktx", "room-rxjava2", "room-rxjava3", "room-guava", "room-paging" ]

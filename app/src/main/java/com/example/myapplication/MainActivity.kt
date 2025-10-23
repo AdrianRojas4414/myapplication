@@ -47,6 +47,7 @@ import com.example.myapplication.features.maintenance.presentation.MaintenanceVi
 import com.example.myapplication.navigation.AppNavigation
 import com.example.myapplication.navigation.NavigationDrawer
 import com.example.myapplication.navigation.NavigationViewModel
+import com.example.myapplication.navigation.Screen
 import com.example.myapplication.ui.theme.MyApplicationTheme
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.collect
@@ -152,62 +153,69 @@ fun MainApp( navigationViewModel: NavigationViewModel) {
             rememberDrawerState(initialValue =
                 androidx.compose.material3.DrawerValue.Closed)
         val coroutineScope = rememberCoroutineScope()
-
-
-        ModalNavigationDrawer(
-            drawerState = drawerState,
-            drawerContent = {
-                ModalDrawerSheet(
-                    modifier = Modifier.width(256.dp)
-                ) {
-                    Box(
-                        modifier = Modifier.width(256.dp),
-                        contentAlignment = Alignment.Center
+        val isMovieDetail = currentDestination?.route?.startsWith(Screen.MovieDetail.route) == true
+        if (isMovieDetail) {
+            AppNavigation(
+                navController = navController,
+                navigationViewModel = navigationViewModel,
+                modifier = Modifier
+            )
+        }else{
+            ModalNavigationDrawer(
+                drawerState = drawerState,
+                drawerContent = {
+                    ModalDrawerSheet(
+                        modifier = Modifier.width(256.dp)
                     ) {
-                        Image(
-                            modifier = Modifier.width(120.dp),
-                            painter = painterResource(id =
-                                R.drawable.ic_launcher_background),
-                            contentDescription = "Logo",
-                        )
-                        Image(
-                            painter = painterResource(id =
-                                R.drawable.ic_launcher_foreground),
-                            contentDescription = "Logo",
-                            modifier = Modifier.padding(16.dp)
-                        )
-                    }
-                    navigationDrawerItems.forEach { item ->
-                        val isSelected = currentDestination?.route == item.route
-                        NavigationDrawerItem(
-                            icon = {
-                                Icon(
-                                    imageVector = if (isSelected) item.
-                                    selectedIcon else item.unselectedIcon,
-                                    contentDescription = item.label
-                                )
-                            },
-                            label = { Text(item.label) },
-                            selected = isSelected,
-                            onClick = {
-                                navController.navigate(item.route) {
-                                    launchSingleTop = true
-                                    restoreState = true
-                                    popUpTo(
-                                        navController.graph.startDestinationId) {
-                                        saveState = true
+                        Box(
+                            modifier = Modifier.width(256.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Image(
+                                modifier = Modifier.width(120.dp),
+                                painter = painterResource(id =
+                                    R.drawable.ic_launcher_background),
+                                contentDescription = "Logo",
+                            )
+                            Image(
+                                painter = painterResource(id =
+                                    R.drawable.ic_launcher_foreground),
+                                contentDescription = "Logo",
+                                modifier = Modifier.padding(16.dp)
+                            )
+                        }
+                        navigationDrawerItems.forEach { item ->
+                            val isSelected = currentDestination?.route == item.route
+                            NavigationDrawerItem(
+                                icon = {
+                                    Icon(
+                                        imageVector = if (isSelected) item.
+                                        selectedIcon else item.unselectedIcon,
+                                        contentDescription = item.label
+                                    )
+                                },
+                                label = { Text(item.label) },
+                                selected = isSelected,
+                                onClick = {
+                                    navController.navigate(item.route) {
+                                        launchSingleTop = true
+                                        restoreState = true
+                                        popUpTo(
+                                            navController.graph.startDestinationId) {
+                                            saveState = true
+                                        }
+                                    }
+                                    coroutineScope.launch {
+                                        drawerState.close()
                                     }
                                 }
-                                coroutineScope.launch {
-                                    drawerState.close()
-                                }
-                            }
-                        )
+                            )
+                        }
                     }
                 }
+            ) {
+                NavigationDrawerHost(coroutineScope, drawerState, navigationViewModel, navController)
             }
-        ) {
-            NavigationDrawerHost(coroutineScope, drawerState, navigationViewModel, navController)
         }
     }
 }

@@ -5,7 +5,7 @@
     "storage_bucket": "my-application-dfdfa.firebasestorage.app"
   },
   "client": [
-    {s
+    {
       "client_info": {
         "mobilesdk_app_id": "1:467570912555:android:1c33b846051167638e696e",
         "android_client_info": {

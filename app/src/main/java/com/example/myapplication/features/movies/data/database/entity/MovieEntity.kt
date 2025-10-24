@@ -20,5 +20,8 @@ data class MovieEntity(
     val timestamp: String? = "",
 
     @ColumnInfo(name = "overview")
-    val overview: String
+    val overview: String,
+
+    @ColumnInfo(name = "favourite")
+    val favourite: Int = 0
 )

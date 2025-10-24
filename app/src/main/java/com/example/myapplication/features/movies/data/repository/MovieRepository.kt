@@ -19,7 +19,8 @@ class MovieRepository(val remoteDatasource: MovieRemoteDataSource,
                     MovieModel(
                         title = it.title,
                         posterURL = "https://image.tmdb.org/t/p/w185${it.poster_path}",
-                        overview = it.overview
+                        overview = it.overview,
+                        favourite = false
                     )
                 }
 
@@ -36,5 +37,13 @@ class MovieRepository(val remoteDatasource: MovieRemoteDataSource,
 
     fun getMoviesFromDb(): Flow<List<MovieModel>> {
         return localDataSource.getMovies()
+    }
+
+    suspend fun toggleFavourite(movieId: Int, isFavourite: Boolean) {
+        localDataSource.toggleFavourite(movieId, isFavourite)
+    }
+
+    fun getFavouriteMovies(): Flow<List<MovieModel>> {
+        return localDataSource.getFavouriteMovies()
     }
 }

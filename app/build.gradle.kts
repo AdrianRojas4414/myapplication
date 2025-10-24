@@ -65,9 +65,11 @@ dependencies {
     implementation(libs.firebase.messaging)
     implementation(libs.firebase.remoteconfig)
     implementation(libs.datastore)
+    implementation(libs.androidx.core.splashscreen)
 
     //local bundle room
     implementation(libs.bundles.local)
+    implementation(libs.androidx.junit.ktx)
     annotationProcessor(libs.room.compiler)
     ksp(libs.room.compiler)
     testImplementation(libs.room.testing)
@@ -79,6 +81,10 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
+    androidTestImplementation(libs.room.testing)
+    androidTestImplementation(libs.androidx.core.testing)
+    androidTestImplementation(libs.androidx.runner)
+    androidTestImplementation(libs.androidx.rules)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
     implementation(libs.kotlinx.serialization.json)

@@ -24,6 +24,10 @@ class MoviesViewModel(val useCase: GetMoviesUseCase,
     private val _state = MutableStateFlow<MoviesUiState>(MoviesUiState.Init)
     val state : StateFlow<MoviesUiState> = _state.asStateFlow()
 
+    init {
+        observeLocalMovies()
+    }
+
     private fun observeLocalMovies() {
         viewModelScope.launch {
             repository.getMoviesFromDb().collect { movies ->
@@ -40,9 +44,19 @@ class MoviesViewModel(val useCase: GetMoviesUseCase,
             val result = useCase.invoke()
 
             result.fold(
-                onSuccess = { list -> _state.value = MoviesUiState.Success(list) },
-                onFailure = { err -> _state.value = MoviesUiState.Error(err.message ?: "Error desconocido") }
+                onSuccess = { list ->
+                    //_state.value = MoviesUiState.Success(list)
+                            },
+                onFailure = { err ->
+                    _state.value = MoviesUiState.Error(err.message ?: "Error desconocido")
+                }
             )
+        }
+    }
+
+    fun toggleFavourite(movieId: Int, currentFavouriteState: Boolean) {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.toggleFavourite(movieId, !currentFavouriteState)
         }
     }
 }

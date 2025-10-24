@@ -39,6 +39,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
@@ -50,6 +52,7 @@ import com.example.myapplication.navigation.NavigationViewModel
 import com.example.myapplication.navigation.Screen
 import com.example.myapplication.ui.theme.MyApplicationTheme
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
@@ -58,10 +61,24 @@ import org.koin.androidx.compose.koinViewModel
 class MainActivity : ComponentActivity() {
     private val navigationViewModel: NavigationViewModel by viewModels()
     private var currentIntent: Intent? = null
+    private var keepSplashOnScreen = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
+        //splashscreen
+        val splashScreen = installSplashScreen()
+
         super.onCreate(savedInstanceState)
         currentIntent = intent
+
+        splashScreen.setKeepOnScreenCondition {
+            keepSplashOnScreen
+        }
+
+        lifecycleScope.launch {
+            delay(4000)
+            keepSplashOnScreen = false
+        }
 
         enableEdgeToEdge()
         setContent {

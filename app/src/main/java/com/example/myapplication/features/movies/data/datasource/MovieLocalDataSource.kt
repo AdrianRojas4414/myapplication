@@ -18,4 +18,12 @@ class MovieLocalDataSource(val dao: IMovieDao) {
         }
         dao.insertMovies(entities)
     }
+
+    suspend fun toggleFavourite(movieId: Int, isFavourite: Boolean) {
+        dao.updateFavourite(movieId, if (isFavourite) 1 else 0)
+    }
+
+    fun getFavouriteMovies(): Flow<List<MovieModel>> {
+        return dao.getFavouriteMovies().map { list -> list.map { it.toModel() } }
+    }
 }

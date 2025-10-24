@@ -14,4 +14,10 @@ interface IMovieDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertMovies(movies: List<MovieEntity>)
+
+    @Query("UPDATE movies SET favourite = :isFavourite WHERE id = :movieId")
+    suspend fun updateFavourite(movieId: Int, isFavourite: Int)
+
+    @Query("SELECT * FROM movies WHERE favourite = 1")
+    fun getFavouriteMovies(): Flow<List<MovieEntity>>
 }

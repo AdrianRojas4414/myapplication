@@ -149,6 +149,12 @@ fun NavigationDrawerHost(
 fun MainApp( navigationViewModel: NavigationViewModel) {
     val maintenanceViewModel: MaintenanceViewModel = koinViewModel()
     val maintenanceMode by maintenanceViewModel.maintenanceMode.collectAsState()
+    val navController: NavHostController = rememberNavController()
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentDestination = navBackStackEntry?.destination
+    val notShowTopBar =
+        (currentDestination?.route?.startsWith(Screen.MovieDetail.route) == true) ||
+                (currentDestination?.route?.startsWith(Screen.Atulado.route) == true)
 
     LaunchedEffect(maintenanceMode) {
         Log.d("MainApp", "Maintenance mode cambió a: $maintenanceMode")

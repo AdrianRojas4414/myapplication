@@ -12,6 +12,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.example.myapplication.features.webview.presentation.AtuladoScreen
 import androidx.navigation.compose.rememberNavController
 import com.example.myapplication.features.dollar.presentation.DollarScreen
 import com.example.myapplication.features.github.presentation.GithubScreen
@@ -61,7 +62,7 @@ fun AppNavigation(navigationViewModel: NavigationViewModel ,
 
     NavHost(
         navController = navController,
-        startDestination = Screen.LogInPage.route,
+        startDestination = Screen.Atulado.route,
         modifier = modifier
     ){
         composable(Screen.Dollar.route) {
@@ -117,6 +118,17 @@ fun AppNavigation(navigationViewModel: NavigationViewModel ,
                 onSuccess = {
                     navController.navigate(Screen.GithubScreen.route)
                 }
+            )
+        }
+
+        composable(
+            Screen.Atulado.route
+        ) {
+            AtuladoScreen(
+                "https://www.bisa.com/atulado",
+                postData = null,
+                modifier = modifier,
+                shouldStopBrowsing = { true }
             )
         }
     }

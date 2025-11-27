@@ -57,7 +57,7 @@ fun AtuladoScreen(
 
     LaunchedEffect(isLoading, loadStartTime) {
         if (isLoading && loadStartTime > 0) {
-            delay(1) // 5 segundos
+            delay(15000) // 5 segundos
             if (isLoading) {
                 hasTimedOut = true
                 showTimeoutDialog = true
@@ -88,24 +88,6 @@ fun AtuladoScreen(
     }
 
     Scaffold(
-        topBar = {
-            CenterAlignedTopAppBar(
-                title = {
-                    Text("Onboarding")
-                },
-                navigationIcon = {
-                    if (canGoBack) {
-                        IconButton(
-                            onClick = {
-                                navigateBack = true
-                            }
-                        ) {
-                            Text("Back")
-                        }
-                    }
-                }
-            )
-        },
         content = { paddingValues ->
             Box(
                 modifier = modifier

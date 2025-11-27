@@ -34,6 +34,12 @@ import com.example.myapplication.features.profile.data.repository.ProfileReposit
 import com.example.myapplication.features.profile.domain.repository.IProfileRepository
 import com.example.myapplication.features.profile.domain.usercases.GetProfileUseCase
 import com.example.myapplication.features.profile.presentation.ProfileViewModel
+import com.example.myapplication.features.time.data.datasource.TimeLocalDataSource
+import com.example.myapplication.features.time.data.datasource.TimeRemoteDataSource
+import com.example.myapplication.features.time.data.repository.TimeRepository
+import com.example.myapplication.features.time.domain.repository.ITimeRepository
+import com.example.myapplication.features.time.domain.usecases.GetSyncedTimeUseCase
+import com.example.myapplication.features.time.presentation.TimeViewModel
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import okhttp3.OkHttpClient
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -132,4 +138,11 @@ val appModule = module() {
     }
     single { MaintenanceRepository(get(), get()) }
     viewModel { MaintenanceViewModel(get()) }
+
+    // Time Sync
+    single { TimeRemoteDataSource() }
+    single { TimeLocalDataSource(get()) }
+    single<ITimeRepository> { TimeRepository(get(), get()) }
+    single { GetSyncedTimeUseCase(get()) }
+    viewModel { TimeViewModel(get()) }
 }

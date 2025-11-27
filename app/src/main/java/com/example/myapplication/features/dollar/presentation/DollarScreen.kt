@@ -26,6 +26,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.myapplication.features.time.presentation.SyncedTimeDisplay
 import com.example.myapplication.navigation.Screen
 import org.koin.androidx.compose.koinViewModel
 import java.text.SimpleDateFormat
@@ -43,6 +44,8 @@ fun DollarScreen(navController: NavController,
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
     ) {
+        // Mostrar la hora sincronizada en la parte superior
+        SyncedTimeDisplay(modifier = Modifier.padding(16.dp))
         Text("CAMBIOS DEL DOLAR", style = MaterialTheme.typography.headlineMedium)
         when (val stateValue = state.value) {
             is DollarViewModel.DollarUIState.Error -> Text(stateValue.message)

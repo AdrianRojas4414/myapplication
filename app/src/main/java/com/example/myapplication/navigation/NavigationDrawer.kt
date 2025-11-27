@@ -37,4 +37,10 @@ sealed class NavigationDrawer(
         Icons.Filled.DateRange,
         Icons.Outlined.DateRange,
         Screen.MoviesScreen.route)
+
+    data object TimeTest : NavigationDrawer(  // NUEVO
+        "Time Test",
+        Icons.Filled.DateRange,
+        Icons.Outlined.DateRange,
+        Screen.TimeTest.route)
 }

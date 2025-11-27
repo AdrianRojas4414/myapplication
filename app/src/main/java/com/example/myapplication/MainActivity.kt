@@ -170,7 +170,8 @@ fun MainApp( navigationViewModel: NavigationViewModel) {
             NavigationDrawer.Profile,
             NavigationDrawer.Dollar,
             NavigationDrawer.Movie,
-            NavigationDrawer.Github
+            NavigationDrawer.Github,
+            NavigationDrawer.TimeTest
         )
         val drawerState =
             rememberDrawerState(initialValue =

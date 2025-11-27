@@ -23,6 +23,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.navArgument
 import com.example.myapplication.features.movies.domain.model.MovieModel
 import com.example.myapplication.features.movies.presentation.MovieDetailScreen
+import com.example.myapplication.features.time.presentation.TimeTestScreen
 import kotlinx.serialization.json.Json
 import java.net.URLDecoder
 import java.net.URLEncoder
@@ -130,6 +131,10 @@ fun AppNavigation(navigationViewModel: NavigationViewModel ,
                 modifier = modifier,
                 shouldStopBrowsing = { true }
             )
+        }
+
+        composable(Screen.TimeTest.route) {
+            TimeTestScreen(modifier = Modifier.padding())
         }
     }
 }

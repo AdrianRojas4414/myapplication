@@ -34,8 +34,16 @@ import com.example.myapplication.features.profile.data.repository.ProfileReposit
 import com.example.myapplication.features.profile.domain.repository.IProfileRepository
 import com.example.myapplication.features.profile.domain.usercases.GetProfileUseCase
 import com.example.myapplication.features.profile.presentation.ProfileViewModel
+import com.example.myapplication.features.time.data.datasource.PersistentMockServerTimeDataSource
+import com.example.myapplication.features.time.data.datasource.ServerTimeDataSource
+import com.example.myapplication.features.time.data.local.ServerTimeLocalStore
+import com.example.myapplication.features.time.data.repository.ServerTimeRepository
+import com.example.myapplication.features.time.domain.model.ManualServerTimeConfig
+import com.example.myapplication.features.time.domain.repository.ITimeRepository
+import com.example.myapplication.features.time.domain.usercases.GetServerTimeUseCase
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import okhttp3.OkHttpClient
+import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
@@ -84,7 +92,16 @@ val appModule = module() {
     // Profile
     single<IProfileRepository> { ProfileRepository() }
     factory { GetProfileUseCase(get()) }
-    viewModel { ProfileViewModel(get()) }
+    single { ServerTimeLocalStore(androidContext()) }
+    single<ServerTimeDataSource> {
+        PersistentMockServerTimeDataSource(
+            localStore = get(),
+            manualSeedEpochMillis = ManualServerTimeConfig.FIXED_SERVER_EPOCH_MILLIS
+        )
+    }
+    single<ITimeRepository> { ServerTimeRepository(get()) }
+    factory { GetServerTimeUseCase(get()) }
+    viewModel { ProfileViewModel(get(), get()) }
 
 
     //Login

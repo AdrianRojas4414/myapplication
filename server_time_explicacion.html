@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Hora del servidor (mock) - Flujo</title>
+  <style>
+    :root {
+      --bg: #0d1117;
+      --card: #161b22;
+      --text: #e6edf3;
+      --muted: #8b949e;
+      --accent: #58a6ff;
+      --success: #3fb950;
+      --warning: #f2cc60;
+      --error: #ff7b72;
+      --border: #30363d;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at 15% 20%, #0f172a 0, #0d1117 40%), radial-gradient(circle at 85% 10%, #0a1f38 0, #0d1117 40%), radial-gradient(circle at 50% 80%, #132042 0, #0d1117 50%);
+      color: var(--text);
+      padding: 40px 18px 64px;
+      display: flex;
+      justify-content: center;
+    }
+    main {
+      width: min(960px, 100%);
+    }
+    h1, h2, h3 {
+      margin: 0 0 12px;
+      letter-spacing: 0.2px;
+    }
+    h1 { font-size: 28px; }
+    h2 { font-size: 20px; margin-top: 32px; }
+    p { margin: 0 0 12px; color: var(--muted); line-height: 1.6; }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 18px 20px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.35);
+      margin-top: 14px;
+    }
+    .flow {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 14px;
+      margin-top: 12px;
+    }
+    .pill {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(88,166,255,0.08);
+      border: 1px solid rgba(88,166,255,0.3);
+      color: var(--text);
+      font-size: 13px;
+      margin-bottom: 10px;
+    }
+    code {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border);
+      padding: 2px 6px;
+      border-radius: 6px;
+      font-size: 13px;
+      color: #c9d1d9;
+    }
+    ul { padding-left: 18px; color: var(--muted); }
+    .status { display: flex; gap: 8px; align-items: center; margin-top: 8px; }
+    .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 8px rgba(88,166,255,0.08); }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Hora real (mock de backend)</h1>
+    <p>La hora se fija en código, se hace avanzar con <code>SystemClock.elapsedRealtime()</code> (no depende de la hora del sistema) y se persiste el avance para sobrevivir reinicios sin internet.</p>
+
+    <section class="card">
+      <div class="pill">Como se calcula</div>
+      <ul>
+        <li>La hora "real" se fija en <code>ManualServerTimeConfig.FIXED_SERVER_EPOCH_MILLIS</code> (ejemplo: <code>1735689600000L</code> para 2024-12-31T00:00:00Z).</li>
+        <li>Primer acceso: se guarda en DataStore la referencia <code>{epoch=fixed, elapsed=SystemClock.elapsedRealtime(), wallclock=System.currentTimeMillis()}</code>.</li>
+        <li>Mismo boot: <code>delta = elapsedRealtimeNow - elapsedGuardado</code> y se devuelve <code>epochGuardado + delta</code> (ignora la hora del sistema).</li>
+        <li>Nuevo boot: si <code>elapsedRealtime</code> es menor, se estima con <code>delta = max(0, wallclockNow - wallclockGuardado)</code> para avanzar el tiempo offline sin internet.</li>
+        <li>Al final, se persiste <code>{epoch=horaCalculada, elapsed=elapsedRealtimeNow, wallclock=System.currentTimeMillis()}</code> para el siguiente ciclo.</li>
+      </ul>
+    </section>
+
+    <section class="card">
+      <div class="pill">Cadena de llamadas en la app</div>
+      <div class="flow">
+        <div>
+          <h3>UI (Profile)</h3>
+          <p>Botón "Mostrar hora del servidor" en <code>ProfileScreen</code> llama <code>fetchServerTime()</code> en el ViewModel.</p>
+        </div>
+        <div>
+          <h3>ViewModel</h3>
+          <p><code>ProfileViewModel.fetchServerTime()</code> → Loading → <code>GetServerTimeUseCase</code> → Success/Error.</p>
+        </div>
+        <div>
+          <h3>Use case</h3>
+          <p><code>GetServerTimeUseCase.invoke()</code> pide al repositorio la hora actual.</p>
+        </div>
+        <div>
+          <h3>Repositorio</h3>
+          <p><code>ServerTimeRepository.getCurrentTime()</code> llama al datasource y envuelve en <code>Result</code>.</p>
+        </div>
+        <div>
+          <h3>Datasource</h3>
+          <p><code>PersistentMockServerTimeDataSource.fetchCurrentEpochMillis()</code> usa la hora fija + <code>elapsedRealtime</code> y persiste la referencia en DataStore.</p>
+        </div>
+      </div>
+      <div class="status">
+        <div class="dot"></div>
+        <p>El valor formateado se muestra como "Hora real: HH:mm:ss".</p>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="pill">Configurar hora mock</div>
+      <ul>
+        <li>Edita <code>ManualServerTimeConfig.FIXED_SERVER_EPOCH_MILLIS</code> con el epoch (ms) que quieras simular.</li>
+        <li>Ejemplo rápido: "hoy a las 10:00 am" (según la fecha local actual) → <code>1764252000000L</code>.</li>
+        <li>Si necesitas otra fecha/hora, calcula su epoch en ms y actualiza el valor; la app mantendrá el avance estable y lo recuperará tras reiniciar.</li>
+      </ul>
+    </section>
+
+    <section class="card">
+      <div class="pill">Archivos clave</div>
+      <ul>
+        <li><code>app/src/main/java/com/example/myapplication/features/time/domain/model/ManualServerTimeConfig.kt</code> (hora fija que simula el backend)</li>
+        <li><code>app/src/main/java/com/example/myapplication/features/time/data/datasource/PersistentMockServerTimeDataSource.kt</code></li>
+        <li><code>app/src/main/java/com/example/myapplication/features/time/data/local/ServerTimeLocalStore.kt</code></li>
+        <li><code>app/src/main/java/com/example/myapplication/features/time/data/repository/ServerTimeRepository.kt</code></li>
+        <li><code>app/src/main/java/com/example/myapplication/features/time/domain/usercases/GetServerTimeUseCase.kt</code></li>
+        <li><code>app/src/main/java/com/example/myapplication/features/profile/presentation/ProfileViewModel.kt</code> (estado y acción)</li>
+        <li><code>app/src/main/java/com/example/myapplication/features/profile/presentation/ProfileScreen.kt</code> (botón y render)</li>
+        <li><code>app/src/main/java/com/example/myapplication/di/modules.kt</code> (bindings Koin)</li>
+      </ul>
+    </section>
+  </main>
+</body>
+</html>

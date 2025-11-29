@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -28,6 +29,7 @@ fun ProfileScreen(
     profileViewModel: ProfileViewModel = koinViewModel()
 ) {
     val state = profileViewModel.state.collectAsState()
+    val timeState = profileViewModel.timeState.collectAsState()
 
     LaunchedEffect(Unit) {
         profileViewModel.showProfile()
@@ -76,6 +78,26 @@ fun ProfileScreen(
                     modifier = Modifier.padding(top = 8.dp),
                     textAlign = TextAlign.Center
                 )
+
+                Button(
+                    modifier = Modifier.fillMaxWidth(),
+                    onClick = { profileViewModel.fetchServerTime() }
+                ) {
+                    Text("Mostrar hora del servidor")
+                }
+
+                when (val tm = timeState.value) {
+                    is ProfileViewModel.TimeUiState.Error -> Text(
+                        tm.message,
+                        color = MaterialTheme.colorScheme.error
+                    )
+                    ProfileViewModel.TimeUiState.Idle -> {}
+                    ProfileViewModel.TimeUiState.Loading -> CircularProgressIndicator()
+                    is ProfileViewModel.TimeUiState.Success -> Text(
+                        text = "Hora real: ${tm.formattedTime}",
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                }
             }
         }
     }
